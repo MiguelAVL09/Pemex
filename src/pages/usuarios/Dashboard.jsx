@@ -4,12 +4,12 @@ import { User, ShieldAlert, FileText, LogOut, Bell, Check, Layers, Activity, Boo
 
 import CatalogoCursos from './CatalogoCursos';
 import SalaEstudio from './SalaEstudio';
-import Loader from '../../components/Loader'; // Importamos el Loader
+import Loader from '../../components/Loader';
 
 export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNotificacionLeida }) {
   const [pestañaActiva, setPestañaActiva] = useState('inicio');
   const [cursoActivo, setCursoActivo] = useState(null);
-  const [cargando, setCargando] = useState(false); // Estado para el Loader
+  const [cargando, setCargando] = useState(false);
 
   const [notificaciones, setNotificaciones] = useState([]);
   const [mostrarToast, setMostrarToast] = useState(false);
@@ -18,7 +18,7 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
   const leidas = usuario.notificacionesLeidas || [];
 
   useEffect(() => {
-    fetch('/notificaciones')
+    fetch('/notificaciones') // Recuerda que ya quitamos el localhost:3000 para producción
       .then(res => res.json())
       .then(data => {
         setNotificaciones(data);
@@ -26,7 +26,8 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
         if (misNotifs.filter(n => !leidas.includes(n.id)).length > 0) {
           setMostrarToast(true);
         }
-      });
+      })
+      .catch(error => console.error("Error cargando notificaciones:", error));
   }, [usuario.area, leidas]);
 
   const misNotificaciones = notificaciones.filter(n => n.area === 'Todas' || n.area === usuario.area).reverse();
@@ -35,17 +36,17 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
 
   const animacionPestaña = {
     oculto: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+    salida: { opacity: 0, x: -20, transition: { duration: 0.2 } }
   };
 
-  // Función para simular carga al cambiar de pestaña
   const cambiarPestaña = (pestaña) => {
     if (pestaña === pestañaActiva) return;
     setCargando(true);
     setTimeout(() => {
       setPestañaActiva(pestaña);
       setCargando(false);
-    }, 600); // 600ms de carga simulada
+    }, 600);
   };
 
   if (cursoActivo) {
@@ -55,7 +56,7 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
   return (
     <div style={{ maxWidth: '1000px', margin: '2rem auto', padding: '0 1rem', position: 'relative' }}>
 
-      {/* --- MOSTRAR LOADER SI ESTÁ CARGANDO --- */}
+      {/* --- LOADER DE CARGA --- */}
       <AnimatePresence>
         {cargando && <Loader />}
       </AnimatePresence>
@@ -93,8 +94,8 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
         )}
       </AnimatePresence>
 
-      {/* --- HEADER --- */}
-      <header style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255, 255, 255, 0.9)', padding: '1rem 2rem', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', marginBottom: '2rem' }}>
+      {/* --- HEADER (Ahora usa la clase responsiva) --- */}
+      <header className="dashboard-header" style={{ position: 'relative', background: 'rgba(255, 255, 255, 0.9)', padding: '1rem 2rem', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{ background: 'var(--accent)', padding: '0.5rem', borderRadius: '50%', color: 'white' }}><User size={24} /></div>
           <div>
@@ -105,20 +106,20 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
 
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
 
-          {/* BOTÓN DE CAMPANITA */}
+          {/* BOTÓN DE CAMPANITA Y PANEL */}
           <div style={{ position: 'relative' }}>
             <button onClick={() => { setPanelAbierto(!panelAbierto); setMostrarToast(false); }} style={{ position: 'relative', background: panelAbierto ? '#f3f4f6' : 'white', border: '1px solid #eee', padding: '0.6rem', borderRadius: '8px', cursor: 'pointer', transition: '0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Bell size={20} color="var(--text)" />
               {noLeidas > 0 && <span style={{ position: 'absolute', top: '-6px', right: '-6px', background: 'var(--danger)', color: 'white', fontSize: '0.7rem', padding: '2px 6px', borderRadius: '10px', fontWeight: 'bold', border: '2px solid white' }}>{noLeidas}</span>}
             </button>
 
-            {/* PANEL DESPLEGABLE */}
             <AnimatePresence>
               {panelAbierto && (
                 <motion.div initial={{ opacity: 0, y: -10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   style={{ position: 'absolute', top: '55px', right: '0', width: '350px', background: 'white', borderRadius: '12px', boxShadow: 'var(--shadow-lg)', border: '1px solid #e5e7eb', zIndex: 2000, overflow: 'hidden' }}>
                   <div style={{ background: '#f9fafb', padding: '1rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-h)' }}>Buzón de Avisos</h3>
+                    {noLeidas > 0 && <span style={{ fontSize: '0.8rem', background: '#fee2e2', color: '#dc2626', padding: '2px 8px', borderRadius: '12px', fontWeight: 'bold' }}>{noLeidas} nuevos</span>}
                   </div>
 
                   <div style={{ maxHeight: '320px', overflowY: 'auto' }}>
@@ -134,7 +135,7 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
                               <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)', lineHeight: '1.4' }}>{notif.mensaje}</p>
                             </div>
                             {esNueva && (
-                              <button onClick={() => marcarNotificacionLeida(notif.id)} title="Marcar como leída" style={{ flexShrink: 0, background: 'white', border: '1px solid #d1d5db', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--accent)' }}>
+                              <button onClick={() => marcarNotificacionLeida(notif.id)} title="Marcar como leída" style={{ flexShrink: 0, background: 'white', border: '1px solid #d1d5db', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--accent)', transition: '0.2s' }} onMouseOver={(e) => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = 'white'; }} onMouseOut={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'var(--accent)'; }}>
                                 <Check size={16} />
                               </button>
                             )}
@@ -148,16 +149,17 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
             </AnimatePresence>
           </div>
 
-          {/* --- NUEVO BOTÓN DE CERRAR SESIÓN --- */}
           <button onClick={onLogout} className="btn-logout">
             <LogOut size={18} /> Cerrar Sesión
           </button>
         </div>
       </header>
 
-      {/* --- ESTRUCTURA PRINCIPAL --- */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '2rem' }}>
-        <motion.nav initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      {/* --- ESTRUCTURA PRINCIPAL (Ahora usa dashboard-layout) --- */}
+      <div className="dashboard-layout">
+
+        {/* Menú Lateral (Ahora usa nav-menu) */}
+        <motion.nav className="nav-menu" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
           <BotonMenu activo={pestañaActiva === 'inicio'} onClick={() => cambiarPestaña('inicio')} icono={<Activity size={20} />} texto="Resumen" />
           <BotonMenu activo={pestañaActiva === 'capacitacion'} onClick={() => cambiarPestaña('capacitacion')} icono={<BookOpen size={20} />} texto="Centro de Aprendizaje" />
           <BotonMenu activo={pestañaActiva === 'documentos'} onClick={() => cambiarPestaña('documentos')} icono={<FileText size={20} />} texto="Expediente" />
@@ -169,7 +171,8 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
             {pestañaActiva === 'inicio' && (
               <motion.div key="inicio" variants={animacionPestaña} initial="oculto" animate="visible" exit="salida">
                 <h2 style={{ color: 'var(--accent)', marginBottom: '1.5rem' }}>Estado de {usuario.nombre.split(' ')[0]}</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                {/* Cuadrícula (Ahora usa grid-2-cols) */}
+                <div className="grid-2-cols">
                   <TarjetaInfo titulo="Días sin accidentes" valor="342" color="#059669" />
                   <TarjetaInfo titulo="Cursos Aprobados" valor="0" color="#2563eb" />
                 </div>

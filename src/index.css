@@ -227,3 +227,79 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/* =========================================
+   DISEÑO RESPONSIVO (MÓVILES Y TABLETS)
+   ========================================= */
+
+/* Clases estructurales base (PC por defecto) */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 2rem;
+}
+
+.grid-2-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Reglas para pantallas de Tablet y Celular (menos de 768px de ancho) */
+@media (max-width: 768px) {
+
+  /* 1. Apilar el encabezado y centrarlo */
+  .dashboard-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+    padding: 1rem !important;
+  }
+
+  .dashboard-header>div {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* 2. El panel lateral y el contenido principal se apilan uno sobre otro */
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* 3. Las tarjetas de "Días sin accidentes" se ponen una arriba de otra */
+  .grid-2-cols {
+    grid-template-columns: 1fr;
+  }
+
+  /* 4. El menú lateral se vuelve un menú horizontal deslizable */
+  .nav-menu {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+
+  .nav-menu button {
+    white-space: nowrap;
+    /* Evita que el texto de los botones se corte */
+    font-size: 0.9rem;
+  }
+
+  /* 5. Ajustar el cuadro emergente (Toast) para que no se salga de la pantalla */
+  .loader-overlay~div[style*="position: fixed"] {
+    width: 90% !important;
+    right: 5% !important;
+    bottom: 20px !important;
+  }
+}
