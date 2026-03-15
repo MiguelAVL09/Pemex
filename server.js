@@ -98,7 +98,7 @@ app.delete('/cursos/:id', (req, res) => {
 });
 
 // Si el usuario recarga la página, Node le vuelve a mandar el index.html de React
-app.get('*', (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
