@@ -1,0 +1,35 @@
+{
+  "usuarios": [
+    {
+      "id": "admin123",
+      "ficha": "admin123",
+      "nombre": "Administrador Principal",
+      "rol": "admin",
+      "password": "310722"
+    },
+    {
+      "id": "11111",
+      "ficha": "11111",
+      "nombre": "Miguel Hernández",
+      "rol": "user",
+      "password": "123456"
+    }
+  ],
+  "cursos": [
+    {
+      "id": "c1",
+      "titulo": "Seguridad SSPA Básica",
+      "prioridad": "obligatorio",
+      "descripcion": "Normativas esenciales de seguridad industrial, uso de EPP y tolerancia cero.",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      "id": "c2",
+      "titulo": "Liderazgo de Cuadrillas",
+      "prioridad": "opcional",
+      "descripcion": "Manejo de personal y resolución de conflictos en áreas operativas.",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
