@@ -2,12 +2,22 @@ import express from 'express';
 import sqlite3Pkg from 'sqlite3';
 import cors from 'cors';
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const sqlite3 = sqlite3Pkg.verbose();
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// Le decimos a Express que sirva los archivos estáticos de React
+app.use(express.static(path.join(__dirname, 'dist')));
+
 
 // 1. CONEXIÓN A LA BASE DE DATOS
 const db = new sqlite3.Database('./pemex.db', (err) => {
@@ -85,6 +95,11 @@ app.post('/cursos', (req, res) => {
 
 app.delete('/cursos/:id', (req, res) => {
     db.run(`DELETE FROM cursos WHERE id = ?`, [req.params.id], () => res.json({ message: "Curso eliminado" }));
+});
+
+// Si el usuario recarga la página, Node le vuelve a mandar el index.html de React
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // --- INICIAR SERVIDOR ---

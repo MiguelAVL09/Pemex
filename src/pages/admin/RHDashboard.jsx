@@ -21,7 +21,7 @@ export default function RHDashboard({ rh, onLogout }) {
         };
 
         try {
-            await fetch('http://localhost:3000/notificaciones', {
+            await fetch('/notificaciones', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(notificacion)

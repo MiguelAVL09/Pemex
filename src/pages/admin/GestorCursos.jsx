@@ -9,7 +9,7 @@ export default function GestorCursos() {
 
     // Cargar cursos desde la BD
     useEffect(() => {
-        fetch('http://localhost:3000/cursos')
+        fetch('/cursos')
             .then(res => res.json())
             .then(data => setCursos(data));
     }, []);
@@ -21,7 +21,7 @@ export default function GestorCursos() {
             id: idUnico, titulo: nuevoTitulo, prioridad: nuevaPrioridad, descripcion: nuevaDesc, videoUrl: ""
         };
 
-        await fetch('http://localhost:3000/cursos', {
+        await fetch('cursos', {
             method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(nuevoCurso)
         });
         setCursos([...cursos, nuevoCurso]);
@@ -29,7 +29,7 @@ export default function GestorCursos() {
     };
 
     const borrarCurso = async (id) => {
-        await fetch(`http://localhost:3000/cursos/${id}`, { method: 'DELETE' });
+        await fetch(`/cursos/${id}`, { method: 'DELETE' });
         setCursos(cursos.filter(c => c.id !== id));
     };
 

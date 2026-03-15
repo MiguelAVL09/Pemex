@@ -6,7 +6,7 @@ export default function CatalogoCursos({ onSeleccionarCurso }) {
     const [cursos, setCursos] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/cursos')
+        fetch('/cursos')
             .then(res => res.json())
             .then(data => setCursos(data));
     }, []);

@@ -14,7 +14,7 @@ function App() {
   const [haciendoExamen, setHaciendoExamen] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:3000/usuarios')
+    fetch('/usuarios')
       .then(res => res.json())
       .then(datos => setUsuariosDb(datos));
   }, []);
@@ -35,7 +35,7 @@ function App() {
   const crearPassword = async (fichaIngresada, nuevaPassword) => {
     const usuario = usuariosDb.find(u => u.ficha === fichaIngresada);
     const usuarioActualizado = { ...usuario, password: nuevaPassword, notificacionesLeidas: [] };
-    await fetch(`http://localhost:3000/usuarios/${fichaIngresada}`, {
+    await fetch(`/usuarios/${fichaIngresada}`, {
       method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(usuarioActualizado)
     });
     setUsuariosDb(usuariosDb.map(u => u.ficha === fichaIngresada ? usuarioActualizado : u));
@@ -48,7 +48,7 @@ function App() {
     const usuarioActualizado = { ...usuarioActual, notificacionesLeidas: nuevasLeidas };
 
     // Le avisamos al backend (SQLite) que actualice a este trabajador
-    await fetch(`http://localhost:3000/usuarios/${usuarioActual.ficha}`, {
+    await fetch(`usuarios/${usuarioActual.ficha}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(usuarioActualizado)

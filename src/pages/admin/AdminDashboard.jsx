@@ -15,7 +15,7 @@ export default function AdminDashboard({ admin, usuariosDb, setUsuariosDb, onLog
     if (modoEdicion) {
       const usuarioEditado = { id: nuevaFicha, ficha: nuevaFicha, nombre: nuevoNombre, rol: nuevoRol, area: nuevaArea };
 
-      await fetch(`http://localhost:3000/usuarios/${nuevaFicha}`, {
+      await fetch(`/usuarios/${nuevaFicha}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(usuarioEditado)
@@ -28,7 +28,7 @@ export default function AdminDashboard({ admin, usuariosDb, setUsuariosDb, onLog
 
       const nuevoUser = { id: nuevaFicha, ficha: nuevaFicha, nombre: nuevoNombre, rol: nuevoRol, area: nuevaArea };
 
-      await fetch('http://localhost:3000/usuarios', {
+      await fetch('/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(nuevoUser)
@@ -46,7 +46,7 @@ export default function AdminDashboard({ admin, usuariosDb, setUsuariosDb, onLog
   const borrarUsuario = async (fichaABorrar) => {
     if (fichaABorrar === admin.ficha) return alert("No te puedes borrar a ti mismo");
 
-    await fetch(`http://localhost:3000/usuarios/${fichaABorrar}`, { method: 'DELETE' });
+    await fetch(`/usuarios/${fichaABorrar}`, { method: 'DELETE' });
     setUsuariosDb(usuariosDb.filter(u => u.ficha !== fichaABorrar));
   };
 

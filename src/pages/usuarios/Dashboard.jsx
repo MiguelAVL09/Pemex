@@ -18,7 +18,7 @@ export default function Dashboard({ usuario, onLogout, onIniciarExamen, marcarNo
   const leidas = usuario.notificacionesLeidas || [];
 
   useEffect(() => {
-    fetch('http://localhost:3000/notificaciones')
+    fetch('/notificaciones')
       .then(res => res.json())
       .then(data => {
         setNotificaciones(data);
